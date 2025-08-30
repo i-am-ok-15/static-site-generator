@@ -1,7 +1,7 @@
-from textnode import TextNode
+from textnode import TextNode, TextType
 
 
 def main():
-    text_1 = TextNode("anchor text", "text type", "some url")
-    print(f"TextNode({text_1.text}, {text_1.text_type}, {text_1.url})")
+    text_1 = TextNode("anchor text", TextType.LINK, "www.google.com")
+    print(text_1)
 main()

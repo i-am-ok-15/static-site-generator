@@ -16,9 +16,9 @@ class TextNode:
         self.text_type = text_type
         self.url = url
 
-    def __eq__(self, text_node):
+    def __eq__(self, other):
 
-        if not isinstance(self, text_node):
+        if not isinstance(self, TextNode):
             return NotImplemented
         return (
             self.text == other.text and

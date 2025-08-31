@@ -45,9 +45,6 @@ class TestHTMLNode(unittest.TestCase):
 
     def test_leaf_to_html_link(self):
         node = LeafNode("a", "Google", props={"href": "https://www.google.com",})
-        print("**************************")
-        print(node.to_html())
-        print("**************************")
         self.assertEqual(node.to_html(), """<a href="https://www.google.com">Google</a>""")
     
     def test_to_html_with_children(self):
@@ -63,3 +60,23 @@ class TestHTMLNode(unittest.TestCase):
             parent_node.to_html(),
             "<div><span><b>grandchild</b></span></div>",
         )
+    
+    def test_to_html_with_tree(self):
+        fourth_tier_a = LeafNode("b", "leafnode")
+        fourth_tier_b = LeafNode("b", "leafnode")
+
+        third_tier_one = LeafNode("span", "leafnode")
+        third_tier_two = LeafNode("span", "leafnode")
+        third_tier_three = ParentNode("span", [fourth_tier_a, fourth_tier_b])
+
+        second_tier_a = ParentNode("p", [third_tier_one, third_tier_two])
+        second_tier_b = ParentNode("p", [third_tier_three])
+
+        first_tier_one = ParentNode("div", [second_tier_a, second_tier_b])
+
+        self.assertEqual(
+            first_tier_one.to_html(),
+            "<div><p><span>leafnode</span><span>leafnode</span></p><p><span><b>leafnode</b><b>leafnode</b></span></p></div>",
+        )
+
+        

@@ -14,10 +14,12 @@ class HTMLNode:
     
     def props_to_html(self):
         
-        print(self)
+        if not self.props:
+            return ""
         html_string = ""
         for key, value in self.props.items():
             html_string += f" {key}=\"{value}\""
+        return html_string
 
     def __eq__(self, other):
 
@@ -33,3 +35,23 @@ class HTMLNode:
     def __repr__(self):
 
         return f"HTMLNode(tag={self.tag!r}, value={self.value!r}, children={self.children!r}, props={self.props!r})"
+
+
+class LeafNode(HTMLNode):
+
+    def __init__(self, tag, value, props=None):
+        
+        if not value:
+            raise ValueError("LeafNode must have a value")
+        super().__init__(tag=tag, value=value, children=None, props=props)
+  
+    def to_html(self):
+
+        if not self.value:
+            raise ValueError("LeafNode must have a value")   
+
+        if not self.tag:
+            return f"{self.value}"
+        
+        attributes = self.props_to_html()
+        return f"<{self.tag}{attributes}>{self.value}</{self.tag}>"

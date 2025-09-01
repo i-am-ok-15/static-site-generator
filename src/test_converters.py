@@ -1,7 +1,7 @@
 import unittest
 
 from textnode import TextNode, TextType
-from converters import text_node_to_html_node
+from converters import text_node_to_html_node, split_nodes_delimiter
 
 class TestConverters(unittest.TestCase):
 
@@ -45,3 +45,33 @@ class TestConverters(unittest.TestCase):
         html_node = text_node_to_html_node(image_node)
         self.assertEqual(html_node.tag, "img")
         self.assertEqual(html_node.to_html(), """<img src="www.imagelink.com" alt="this is a test image">This is an image node</img>""")
+
+    def test_split_delimiter_bold(self):
+
+        markdown_string = "this is a test message for my **bold markdown 1**"
+        delimiter = "**"
+        text_type = "BOLD"
+
+        node = TextNode(markdown_string, TextType.TEXT)
+
+        print(split_nodes_delimiter([node], delimiter, text_type))
+    
+    def test_split_delimiter_italic(self):
+
+        markdown_string = "this is a test message for my _italic markdown 1_"
+        delimiter = "_"
+        text_type = "ITALIC"
+
+        node = TextNode(markdown_string, TextType.TEXT)
+
+        print(split_nodes_delimiter([node], delimiter, text_type))
+    
+    def test_split_delimiter_code(self):
+
+        markdown_string = "this is a test message for my `bold markdown 1`"
+        delimiter = "`"
+        text_type = "CODE"
+
+        node = TextNode(markdown_string, TextType.TEXT)
+
+        print(split_nodes_delimiter([node], delimiter, text_type))

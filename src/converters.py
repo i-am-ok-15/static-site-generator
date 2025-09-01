@@ -20,3 +20,29 @@ def text_node_to_html_node(text_node):
         return LeafNode(tag="img", value=text_node.text, props={"src": text_node.url, "alt": text_node.alt})
     raise ValueError(f"Unhandled TextType: {text_node.text_type}")
 
+def split_nodes_delimiter(old_nodes, delimiter, text_type):
+
+    new_nodes = []
+
+    for node in old_nodes:
+
+        if node.text_type != TextType.TEXT:
+            new_nodes.append(node)
+            continue
+        
+        splits = node.text.split(delimiter)
+
+        if len(splits) % 2 == 0:
+            raise Exception(f"Unpaired {delimiter} in {node.text}")
+
+        for i, part in enumerate(splits):
+            if i % 2 == 0:
+                if part == "":
+                    continue
+                even_node = TextNode(part, TextType.TEXT)
+                new_nodes.append(even_node)
+            else:
+                odd_node = TextNode(part, text_type)
+                new_nodes.append(odd_node)
+ 
+    return new_nodes

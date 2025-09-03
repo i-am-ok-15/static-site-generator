@@ -1,5 +1,6 @@
 import re
 from textnode import TextNode, TextType
+from blocknode import BlockType
 from htmlnode import LeafNode
 
 def text_node_to_html_node(text_node):
@@ -146,7 +147,47 @@ def markdown_to_blocks(markdown):
 
     return clean_blocks
 
-    
+def block_to_block_type(markdown):
 
+    if markdown.startswith("#"):
+        hash_count = 0
+        while hash_count < len(markdown) and markdown[hash_count] == "#" and hash_count < 6:
+            hash_count += 1
+        if 1 <= hash_count <= 6 and hash_count < len(markdown) and markdown[hash_count] == " " and hash_count + 1 < len(markdown):
+            return BlockType.HEADING
 
+    list_check = markdown.split("\n")
+
+    if list_check[0] == "```":
+        if len(list_check) >= 2 and list_check[0] == "```" and list_check[-1] == "```":
+            return BlockType.CODE
     
+    if list_check[0].startswith(">"):
+        is_quote = True
+        for line in list_check:
+            if not line.startswith(">"):
+                is_quote = False
+                break
+        if is_quote:
+            return BlockType.QUOTE
+
+    if list_check[0].startswith("- "):
+        is_unordered_list = True
+        for i in range(len(list_check)):
+            if not list_check[i].startswith("- "):
+                is_unordered_list = False
+                break
+        if is_unordered_list:
+            return BlockType.UNORDERED_LIST
+    
+    if list_check[0].startswith("1. "):
+        is_ordered_list = True
+        for i in range(len(list_check)):
+            number = i + 1
+            if not list_check[i].startswith(f"{number}. "):
+                is_ordered_list = False
+                break
+        if is_ordered_list:
+            return BlockType.ORDERED_LIST
+
+    return BlockType.PARAGRAPH

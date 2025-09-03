@@ -1,7 +1,7 @@
 import unittest
-
+from blocknode import BlockType
 from textnode import TextNode, TextType
-from converters import text_node_to_html_node, split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link, text_to_textnodes, markdown_to_blocks
+from converters import text_node_to_html_node, split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link, text_to_textnodes, markdown_to_blocks, block_to_block_type
 
 class TestConverters(unittest.TestCase):
 
@@ -171,3 +171,67 @@ This is the same paragraph on a new line
                 "- This is a list\n- with items",
             ],
         )
+
+    def test_block_to_block_type_heading(self):
+
+        markdown = """# this is a heading"""
+
+        block_type = block_to_block_type(markdown)
+
+        self.assertEqual(block_type, BlockType.HEADING)
+
+    def test_block_to_block_type_code(self):
+
+        markdown = """```
+this is code
+```"""
+
+        block_type = block_to_block_type(markdown)
+
+        self.assertEqual(block_type, BlockType.CODE)
+
+    def test_block_to_block_type_short_quote(self):
+
+        markdown = """> this is a short quote"""
+
+        block_type = block_to_block_type(markdown)
+
+        self.assertEqual(block_type, BlockType.QUOTE)
+
+    def test_block_to_block_type_long_quote(self):
+
+        markdown = """>this is a long quote
+>this is more of the quote
+>wow this is a long quote"""
+
+        block_type = block_to_block_type(markdown)
+
+        self.assertEqual(block_type, BlockType.QUOTE)
+    
+    def test_block_to_block_type_unordered_list(self):
+
+        markdown = """- this is an unordered list
+- this is another item on the list
+- oh and don't forget this item on the list"""
+
+        block_type = block_to_block_type(markdown)
+
+        self.assertEqual(block_type, BlockType.UNORDERED_LIST)
+
+    def test_block_to_block_type_ordered_list(self):
+
+        markdown = """1. this is the first item on the list
+2. this is the second item on the list
+3. this is the final item on the list"""
+
+        block_type = block_to_block_type(markdown)
+
+        self.assertEqual(block_type, BlockType.ORDERED_LIST)
+
+    def test_block_to_block_type_paragraph(self):
+
+        markdown = """this is lots of nonsesense that I am writing"""
+
+        block_type = block_to_block_type(markdown)
+
+        self.assertEqual(block_type, BlockType.PARAGRAPH)

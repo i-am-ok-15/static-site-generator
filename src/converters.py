@@ -21,6 +21,18 @@ def text_node_to_html_node(text_node):
         return LeafNode(tag="img", value=text_node.text, props={"src": text_node.url, "alt": text_node.alt})
     raise ValueError(f"Unhandled TextType: {text_node.text_type}")
 
+def text_to_textnodes(text):
+
+    text_node = [TextNode(text, TextType.TEXT)]
+
+    new_nodes = split_nodes_image(text_node)
+    new_nodes = split_nodes_link(new_nodes)
+    new_nodes = split_nodes_delimiter(new_nodes, "`", TextType.CODE)
+    new_nodes = split_nodes_delimiter(new_nodes, "**", TextType.BOLD)
+    new_nodes = split_nodes_delimiter(new_nodes, "_", TextType.ITALIC)
+
+    return new_nodes
+
 def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
     new_nodes = []
@@ -114,14 +126,27 @@ def split_nodes_link(old_nodes):
         
     return new_nodes
 
-def text_to_textnodes(text):
+def markdown_to_blocks(markdown):
 
-    text_node = [TextNode(text, TextType.TEXT)]
+    blocks = markdown.split("\n\n")
 
-    new_nodes = split_nodes_image(text_node)
-    new_nodes = split_nodes_link(new_nodes)
-    new_nodes = split_nodes_delimiter(new_nodes, "`", TextType.CODE)
-    new_nodes = split_nodes_delimiter(new_nodes, "**", TextType.BOLD)
-    new_nodes = split_nodes_delimiter(new_nodes, "_", TextType.ITALIC)
+    stripped_blocks = []
 
-    return new_nodes
+    for block in blocks:
+        stripped_block = block.strip()
+        stripped_blocks.append(stripped_block)
+    
+    clean_blocks = []
+
+    for block in stripped_blocks:
+        if len(block) == 0:
+            pass
+        else:
+            clean_blocks.append(block)
+
+    return clean_blocks
+
+    
+
+
+    

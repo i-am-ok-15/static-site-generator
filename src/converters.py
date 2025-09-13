@@ -196,22 +196,13 @@ def markdown_to_html_node(markdown):
     
     html_children = []
 
-    # this func should take a markdown document (string) into a single HTMLNode
-    # which has several child HTMLNodes representing nested elements.
-
-    # split markdown into blocks
     blocks = markdown_to_blocks(markdown)
 
-    # loop over each block
     for block in blocks:
-        #determine the type of block
         block_type = block_to_block_type(block)
+
         if block_type == BlockType.HEADING:
-            # add html tags for paragraph
-            node = heading_to_htmlnode(block)
-
-            #then split node to identify in line markdown
-
+            node = heading_to_htmlnode(block) # complete
 
         elif block_type == BlockType.CODE:
             node = code_to_htmlnode(block)
@@ -226,13 +217,37 @@ def markdown_to_html_node(markdown):
             node = ordered_list_to_htmlnode(block)
 
         else:
-            node = paragraph_to_htmlnode(block)
+            node = paragraph_to_htmlnode(block) # complete
+        
+        if node is not None:
+            html_children.append(node)        
+
 
     return HTMLNode(tag="div", children=html_children)
 
 def heading_to_htmlnode(block):
-    pass
 
+    heading_level = 0
+
+    for char in block:
+        if char == "#":
+            heading_level += 1
+        else:
+            break
+    
+    if not 1 <= heading_level <= 6:
+        return None
+    
+    if block[heading_level:heading_level + 1] != " ":
+        return None
+    
+    heading_text = block[heading_level + 1:].strip()
+    heading_tag = f"h{heading_level}"
+    children = text_to_children(heading_text)
+    
+    return HTMLNode(tag=heading_tag, children=children)
+    
+    
 def code_to_htmlnode(block):
     pass
 
@@ -246,9 +261,33 @@ def ordered_list_to_htmlnode(block):
     pass
 
 def paragraph_to_htmlnode(block):
-    pass
-
-def text_to_children(block):
     
-    #for each block, use the appropriate textNode - HTMLNode conversion
-    pass
+    lines = block.split("\n")
+    clean_lines = []
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        clean_lines.append(line)
+    
+    clean_text = " ".join(clean_lines)
+    if not clean_text:
+        return None
+    
+    children =  text_to_children(clean_text)
+    if not children:
+        return None
+
+    return HTMLNode("p", children=children)
+
+
+def text_to_children(clean_text):
+    
+    text_nodes = text_to_textnodes(clean_text)
+    html_nodes = []
+
+    for text_node in text_nodes:
+        html_node = text_node_to_html_node(text_node)
+        html_nodes.append(html_node)
+
+    return html_nodes

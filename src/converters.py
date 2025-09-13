@@ -1,7 +1,7 @@
 import re
 from textnode import TextNode, TextType
 from blocknode import BlockType
-from htmlnode import LeafNode
+from htmlnode import HTMLNode, LeafNode
 
 def text_node_to_html_node(text_node):
 
@@ -191,3 +191,64 @@ def block_to_block_type(markdown):
             return BlockType.ORDERED_LIST
 
     return BlockType.PARAGRAPH
+
+def markdown_to_html_node(markdown):
+    
+    html_children = []
+
+    # this func should take a markdown document (string) into a single HTMLNode
+    # which has several child HTMLNodes representing nested elements.
+
+    # split markdown into blocks
+    blocks = markdown_to_blocks(markdown)
+
+    # loop over each block
+    for block in blocks:
+        #determine the type of block
+        block_type = block_to_block_type(block)
+        if block_type == BlockType.HEADING:
+            # add html tags for paragraph
+            node = heading_to_htmlnode(block)
+
+            #then split node to identify in line markdown
+
+
+        elif block_type == BlockType.CODE:
+            node = code_to_htmlnode(block)
+
+        elif block_type == BlockType.QUOTE:
+            node = quote_to_htmlnode(block)
+
+        elif block_type == BlockType.UNORDERED_LIST:
+            node = unordered_list_to_htmlnode(block)
+
+        elif block_type == BlockType.ORDERED_LIST:
+            node = ordered_list_to_htmlnode(block)
+
+        else:
+            node = paragraph_to_htmlnode(block)
+
+    return HTMLNode(tag="div", children=html_children)
+
+def heading_to_htmlnode(block):
+    pass
+
+def code_to_htmlnode(block):
+    pass
+
+def quote_to_htmlnode(block):
+    pass
+
+def unordered_list_to_htmlnode(block):
+    pass
+
+def ordered_list_to_htmlnode(block):
+    pass
+
+def paragraph_to_htmlnode(block):
+    pass
+
+def text_to_children(block):
+    
+    #for each block, use the appropriate textNode - HTMLNode conversion
+    pass

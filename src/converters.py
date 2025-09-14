@@ -208,7 +208,7 @@ def markdown_to_html_node(markdown):
             node = code_to_htmlnode(block)
 
         elif block_type == BlockType.QUOTE:
-            node = quote_to_htmlnode(block)
+            node = quote_to_htmlnode(block) # complete
 
         elif block_type == BlockType.UNORDERED_LIST:
             node = unordered_list_to_htmlnode(block)
@@ -247,12 +247,34 @@ def heading_to_htmlnode(block):
     
     return HTMLNode(tag=heading_tag, children=children)
     
-    
 def code_to_htmlnode(block):
     pass
 
 def quote_to_htmlnode(block):
-    pass
+
+    lines = block.split("\n")
+
+    quote_text = []
+
+    is_quote = True
+    for line in lines:
+        if not line.startswith("> "):
+            is_quote = False
+            break
+        if line == "> ":
+            quote_text.append("")
+        else:
+            line = line.rstrip()
+            quote_text.append(line[2:])
+
+    if is_quote:
+        quote_text = "\n".join(quote_text)
+        children = text_to_children(quote_text)
+
+        return HTMLNode("blockquote", children=children)
+
+    else:
+        return paragraph_to_htmlnode(block)
 
 def unordered_list_to_htmlnode(block):
     pass
@@ -262,13 +284,7 @@ def ordered_list_to_htmlnode(block):
 
 def paragraph_to_htmlnode(block):
     
-    lines = block.split("\n")
-    clean_lines = []
-    for line in lines:
-        line = line.strip()
-        if not line:
-            continue
-        clean_lines.append(line)
+    clean_lines = normalise_text(block)
     
     clean_text = " ".join(clean_lines)
     if not clean_text:
@@ -280,7 +296,6 @@ def paragraph_to_htmlnode(block):
 
     return HTMLNode("p", children=children)
 
-
 def text_to_children(clean_text):
     
     text_nodes = text_to_textnodes(clean_text)
@@ -291,3 +306,15 @@ def text_to_children(clean_text):
         html_nodes.append(html_node)
 
     return html_nodes
+
+def normalise_text(block):
+
+    lines = block.split("\n")
+    clean_lines = []
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        clean_lines.append(line)
+    
+    return clean_lines

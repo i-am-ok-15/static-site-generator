@@ -1,7 +1,7 @@
 import re
 from textnode import TextNode, TextType
 from blocknode import BlockType
-from htmlnode import HTMLNode, LeafNode
+from htmlnode import HTMLNode, ParentNode, LeafNode
 
 def text_node_to_html_node(text_node):
 
@@ -277,15 +277,51 @@ def quote_to_htmlnode(block):
         return paragraph_to_htmlnode(block)
 
 def unordered_list_to_htmlnode(block):
-    pass
+    
+    lines = block.split("\n")
+
+    items_text = []
+
+    for line in lines:
+        if not line.startswith("- "):
+            continue
+        line = line.rstrip()
+        items_text.append(line[2:])
+    
+    if items_text:
+        list_nodes = []
+        for item in items_text:
+            s = item.strip()
+            if s:
+                list_text = text_to_children(item)
+                if list_text:
+                    list_html = ParentNode("li", children=list_text)
+                    list_nodes.append(list_html)
+
+        if list_nodes:
+            wrapped_list_html = ParentNode("ul", children=list_nodes)
+
+            return wrapped_list_html
+
+        return None
+    
+    else:
+        return None
 
 def ordered_list_to_htmlnode(block):
     pass
 
 def paragraph_to_htmlnode(block):
     
-    clean_lines = normalise_text(block)
-    
+    lines = block.split("\n")
+    clean_lines = []
+
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        clean_lines.append(line)
+
     clean_text = " ".join(clean_lines)
     if not clean_text:
         return None
@@ -306,15 +342,3 @@ def text_to_children(clean_text):
         html_nodes.append(html_node)
 
     return html_nodes
-
-def normalise_text(block):
-
-    lines = block.split("\n")
-    clean_lines = []
-    for line in lines:
-        line = line.strip()
-        if not line:
-            continue
-        clean_lines.append(line)
-    
-    return clean_lines

@@ -330,7 +330,39 @@ def unordered_list_to_htmlnode(block):
         return None
 
 def ordered_list_to_htmlnode(block):
-    pass
+
+    lines = block.split("\n")
+
+    items_text = []
+
+    for line in lines:
+        s = line.strip()
+        if s:
+            sub_strings = line.split(". ", 1)
+            if len(sub_strings) == 2:
+                items_text.append(sub_strings[1])
+        else:
+            continue
+
+    if items_text:
+        list_nodes = []
+        for item in items_text:
+            s = item.strip()
+            if s:
+                list_text = text_to_children(item)
+                if list_text:
+                    list_html = ParentNode("li", children=list_text)
+                    list_nodes.append(list_html)
+
+        if list_nodes:
+            wrapped_list_html = ParentNode("ol", children=list_nodes)
+
+            return wrapped_list_html
+
+        return None
+    
+    else:
+        return None
 
 def paragraph_to_htmlnode(block):
     

@@ -211,7 +211,7 @@ def markdown_to_html_node(markdown):
             node = quote_to_htmlnode(block) # complete
 
         elif block_type == BlockType.UNORDERED_LIST:
-            node = unordered_list_to_htmlnode(block)
+            node = unordered_list_to_htmlnode(block) # complete
 
         elif block_type == BlockType.ORDERED_LIST:
             node = ordered_list_to_htmlnode(block)
@@ -222,8 +222,7 @@ def markdown_to_html_node(markdown):
         if node is not None:
             html_children.append(node)        
 
-
-    return HTMLNode(tag="div", children=html_children)
+    return ParentNode(tag="div", children=html_children)
 
 def heading_to_htmlnode(block):
 
@@ -245,10 +244,32 @@ def heading_to_htmlnode(block):
     heading_tag = f"h{heading_level}"
     children = text_to_children(heading_text)
     
-    return HTMLNode(tag=heading_tag, children=children)
+    return ParentNode(tag=heading_tag, children=children)
     
 def code_to_htmlnode(block):
-    pass
+    
+    lines = block.split("\n")
+
+    fence_start = None
+    fence_end = None
+
+    for i, line in enumerate(lines):
+        if line.startswith("```") and fence_start is None:
+            fence_start = i
+        elif line.startswith("```") and fence_start is not None:
+            fence_end = i
+    
+    if fence_start is not None and fence_end is not None:
+        if fence_end > fence_start:
+            code_inner = lines[fence_start + 1 : fence_end]
+            code_text = "\n".join(code_inner)
+            code_text_node = TextNode(code_text, TextType.CODE)
+            code_html_node = [text_node_to_html_node(code_text_node)]
+            code_nested_node = ParentNode("pre", children=code_html_node)
+
+            return code_nested_node
+    
+    return None
 
 def quote_to_htmlnode(block):
 
@@ -271,7 +292,7 @@ def quote_to_htmlnode(block):
         quote_text = "\n".join(quote_text)
         children = text_to_children(quote_text)
 
-        return HTMLNode("blockquote", children=children)
+        return ParentNode("blockquote", children=children)
 
     else:
         return paragraph_to_htmlnode(block)
@@ -330,7 +351,7 @@ def paragraph_to_htmlnode(block):
     if not children:
         return None
 
-    return HTMLNode("p", children=children)
+    return ParentNode("p", children=children)
 
 def text_to_children(clean_text):
     

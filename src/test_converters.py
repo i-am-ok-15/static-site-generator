@@ -1,7 +1,7 @@
 import unittest
 from blocknode import BlockType
 from textnode import TextNode, TextType
-from converters import text_node_to_html_node, split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link, text_to_textnodes, markdown_to_blocks, block_to_block_type, unordered_list_to_htmlnode
+from converters import text_node_to_html_node, split_nodes_delimiter, extract_markdown_images, extract_markdown_links, split_nodes_image, split_nodes_link, text_to_textnodes, markdown_to_blocks, block_to_block_type, unordered_list_to_htmlnode, quote_to_htmlnode, paragraph_to_htmlnode, heading_to_htmlnode, code_to_htmlnode
 
 class TestConverters(unittest.TestCase):
 
@@ -255,3 +255,45 @@ this is code
         html = result.to_html()
 
         self.assertEqual(html, "<ul><li>this is an unordered list</li><li>this is another item on the list</li><li>oh and don't forget this item on the list</li><li>this is an <b>unordered</b> list</li><li>this is another item on the list</li><li>oh and don't forget this item on the list</li><li>this is an <i>unordered</i> list</li><li>this is another item on the list</li><li>oh and don't forget this item on the list</li><li>this is an <b>unordered</b> list</li><li>this is another item on the list</li><li>oh and don't forget this item on the list</li></ul>")
+
+    def test_quote_to_htmlnode(self):
+
+        markdown = """> my first quote
+> my second quote
+> my third quote"""
+
+        result = quote_to_htmlnode(markdown)
+        html = result.to_html()
+
+        self.assertEqual(html, """<blockquote>my first quote
+my second quote
+my third quote</blockquote>""")
+    
+    def test_paragraph_to_htmlnode(self):
+
+        markdown = "this is my paragraph"
+
+        result = paragraph_to_htmlnode(markdown)
+        html = result.to_html()
+
+        self.assertEqual(html, "<p>this is my paragraph</p>")
+
+    def test_heading_to_htmlnode(self):
+
+        markdown = "### this is my heading"
+        
+        result = heading_to_htmlnode(markdown)
+        html = result.to_html()
+
+        self.assertEqual(html, "<h3>this is my heading</h3>")
+
+    def test_code_to_htmlnode(self):
+
+        markdown = """```
+this is my code
+```"""
+        result = code_to_htmlnode(markdown)
+        html = result.to_html()
+
+        self.assertEqual(html, "<pre><code>this is my code</code></pre>")
+        

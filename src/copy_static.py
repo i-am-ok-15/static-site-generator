@@ -1,9 +1,6 @@
 import os
 import shutil
 
-public = "./public/"
-static = "./static/"
-
 def clean_destination_files(path):
 
     os.listdir(path=path)

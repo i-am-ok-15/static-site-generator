@@ -1,8 +1,8 @@
 import os
 import shutil
 
-destination = "./public copy/"
-origin = "./static/"
+public = "./public/"
+static = "./static/"
 
 def clean_destination_files(path):
 
@@ -12,16 +12,18 @@ def clean_destination_files(path):
     os.mkdir(path=path)
     os.listdir(path=path)
 
-clean_destination_files(destination)
 
-def list_origin_files(path, destination):
+def generate_public_directory(origin, destination):
 
-    for entry in os.listdir(path):
-        full_path = os.path.join(path, entry)
-        if os.path.isdir(full_path):
-            list_origin_files(full_path, destination)
+    clean_destination_files(destination)
+
+    elements = os.listdir(origin)
+
+    for entry in elements:
+        entry_path = os.path.join(origin, entry)
+        if os.path.isdir(entry_path):
+            destination_path = os.path.join(destination, entry)
+            os.mkdir(destination_path)
+            generate_public_directory(entry_path, destination_path)
         else:
-            shutil.copy(full_path, destination)
-
-
-list_origin_files(origin, destination)
+            shutil.copy(entry_path, destination)

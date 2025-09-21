@@ -274,8 +274,6 @@ def code_to_htmlnode(block):
 def quote_to_htmlnode(block):
 
     lines = block.split("\n")
-    print("lines:")
-    print(lines)
     quote_text = []
 
     is_quote = True

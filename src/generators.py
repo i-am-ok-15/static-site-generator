@@ -1,3 +1,4 @@
+import os
 from config import CONTENT, TEMPLATE
 from converters import markdown_to_html_node
 
@@ -25,3 +26,21 @@ def generate_page(from_path, template_path, dest_path):
 
     with open(dest_path, "w") as generated_page:
         generated_page.write(new_template)
+
+def generate_pages_recursively(dir_path_content, template_path, dest_dir_path):
+
+    elements = os.listdir(dir_path_content)
+
+    for entry in elements:
+        entry_path = os.path.join(dir_path_content, entry)
+        if os.path.isdir(entry_path):
+            destination_path = os.path.join(dest_dir_path, entry)
+            os.mkdir(destination_path)
+            generate_pages_recursively(entry_path, template_path, destination_path)
+        else:
+            if entry.endswith(".md"):
+                html_entry = entry.rstrip(".md")
+                html_entry = f"{html_entry}.html"
+                content_path = os.path.join(dir_path_content, entry)
+                destination_path = os.path.join(dest_dir_path, html_entry)
+                generate_page(content_path, template_path, destination_path)

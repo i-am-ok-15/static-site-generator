@@ -1,4 +1,4 @@
 PUBLIC_DIR = "./public/"
 STATIC_DIR = "./static/"
-CONTENT = "./content/index.md"
+CONTENT = "./content/"
 TEMPLATE = "./template.html"

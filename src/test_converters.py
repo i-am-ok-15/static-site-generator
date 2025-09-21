@@ -268,6 +268,19 @@ this is code
         self.assertEqual(html, """<blockquote>my first quote
 my second quote
 my third quote</blockquote>""")
+        
+    def test_tolkein_quote_to_htmlnode(self):
+
+        markdown = """> "I am in fact a Hobbit in all but size."
+>
+> -- J.R.R. Tolkien"""
+
+        result = quote_to_htmlnode(markdown)
+        html = result.to_html()
+        print("tolkien quote:")
+        print(html)
+
+        # self.assertEqual(html, """<blockquote>"I am in fact a Hobbit in all but size."</blockquote>""")
     
     def test_paragraph_to_htmlnode(self):
 

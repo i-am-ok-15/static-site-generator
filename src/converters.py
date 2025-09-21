@@ -202,22 +202,22 @@ def markdown_to_html_node(markdown):
         block_type = block_to_block_type(block)
 
         if block_type == BlockType.HEADING:
-            node = heading_to_htmlnode(block) # complete
+            node = heading_to_htmlnode(block)
 
         elif block_type == BlockType.CODE:
             node = code_to_htmlnode(block)
 
         elif block_type == BlockType.QUOTE:
-            node = quote_to_htmlnode(block) # complete
+            node = quote_to_htmlnode(block)
 
         elif block_type == BlockType.UNORDERED_LIST:
-            node = unordered_list_to_htmlnode(block) # complete
+            node = unordered_list_to_htmlnode(block)
 
         elif block_type == BlockType.ORDERED_LIST:
             node = ordered_list_to_htmlnode(block)
 
         else:
-            node = paragraph_to_htmlnode(block) # complete
+            node = paragraph_to_htmlnode(block)
         
         if node is not None:
             html_children.append(node)        
@@ -274,19 +274,21 @@ def code_to_htmlnode(block):
 def quote_to_htmlnode(block):
 
     lines = block.split("\n")
-
+    print("lines:")
+    print(lines)
     quote_text = []
 
     is_quote = True
     for line in lines:
-        if not line.startswith("> "):
-            is_quote = False
-            break
-        if line == "> ":
-            quote_text.append("")
-        else:
+        if line.startswith("> "):
+            quote_text.append(line[2:])
+            line = line.rstrip()        
+        elif line.startswith(">") and len(line) == 1:
             line = line.rstrip()
             quote_text.append(line[2:])
+        else:
+            is_quote = False
+            break
 
     if is_quote:
         quote_text = "\n".join(quote_text)
@@ -295,7 +297,7 @@ def quote_to_htmlnode(block):
         return ParentNode("blockquote", children=children)
 
     else:
-        return paragraph_to_htmlnode(block)
+        return None
 
 def unordered_list_to_htmlnode(block):
     

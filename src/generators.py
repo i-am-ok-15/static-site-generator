@@ -1,5 +1,4 @@
-import os
-
+from config import CONTENT, TEMPLATE
 from converters import markdown_to_html_node
 
 def extract_title(markdown):
@@ -23,13 +22,8 @@ def generate_page(from_path, template_path, dest_path):
 
     title = extract_title(markdown)
 
-    template.replace(r"{{ Title }}", title)
-    template.replace(r"{{ Content }}", html_string)
-
-    directory = os.path.dirname(dest_path)
-    os.makedirs(directory)
+    new_template = template.replace(r"{{ Title }}", title)
+    new_template = new_template.replace(r"{{ Content }}", html_string)
 
     with open(dest_path, "w") as generated_page:
-        generated_page.write(template)
-
-
+        generated_page.write(new_template)

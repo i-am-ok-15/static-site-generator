@@ -3,7 +3,7 @@ import shutil
 
 def clean_destination_files(path):
 
-    os.listdir(path=path)
+    # os.listdir(path=path)
     shutil.rmtree(path)
 
     os.mkdir(path=path)

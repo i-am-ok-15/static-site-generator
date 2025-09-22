@@ -13,4 +13,5 @@ def main():
     generate_public_directory(STATIC_DIR, DEST_DIR)
     generate_pages_recursively(CONTENT, TEMPLATE, DEST_DIR, basepath)
 
+
 main()

@@ -1,5 +1,5 @@
 PUBLIC_DIR = "./public/"
 STATIC_DIR = "./static/"
-CONTENT = "./content/"
-TEMPLATE = "./template.html"
-DEST_DIR = "docs"
+CONTENT = "./src/content/"
+TEMPLATE = "./src/template.html"
+DEST_DIR = "./docs"

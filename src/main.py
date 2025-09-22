@@ -5,10 +5,10 @@ from generators import generate_pages_recursively
 
 def main():
 
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 3:
         basepath = "/"
     else:
-        basepath = sys.argv[1]
+        basepath = sys.argv[2]
 
     generate_public_directory(STATIC_DIR, DEST_DIR)
     generate_pages_recursively(CONTENT, TEMPLATE, DEST_DIR, basepath)

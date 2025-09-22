@@ -2,12 +2,11 @@ import os
 import shutil
 
 def clean_destination_files(path):
+    
+    if os.path.exists(path):
+        shutil.rmtree(path)
 
-    # os.listdir(path=path)
-    shutil.rmtree(path)
-
-    os.mkdir(path=path)
-    os.listdir(path=path)
+    os.makedirs(path, exist_ok=True)
 
 
 def generate_public_directory(origin, destination):

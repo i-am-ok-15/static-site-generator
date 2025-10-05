@@ -1,6 +1,6 @@
 # Courgette Linguine
 
-# Ingredients
+## Ingredients
 
 - 2 x courgettes
 - linguine
@@ -10,7 +10,7 @@
 - pecorino
 - fresh mint or basil
 
-# Method
+## Method
 
 1. Boil pasta
 2. Sautee courgette rounds in plenty of oil

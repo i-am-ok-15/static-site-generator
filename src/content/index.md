@@ -1,4 +1,4 @@
-# Tolkien Appreciation Society
+# Tolkien Appreciation Society but better
 
 ![JRR Tolkien sitting](/images/tolkien.png)
 

@@ -1,4 +1,4 @@
-# Tolkien Fan Club
+# Tolkien Fan Cult
 
 ![JRR Tolkien sitting](/images/tolkien.png)
 
